@@ -29,31 +29,39 @@ function CardComponent(): React.ReactElement {
   }, [currentState]);
 
   const getSlots = () => {
-    timer.forEach(time => clearInterval(time));
+    timer.forEach((time) => clearInterval(time));
     setTimer([]);
     if (currentDistrict && ageCategory) {
       const interval = setInterval(() => {
         getAvailableSlots(currentDistrict).then((data) => {
           const centerWithSessions = getIfSlotExists(data.data, ageCategory);
-          if (centerWithSessions && centerWithSessions.length) clearInterval(interval);
+          if (centerWithSessions && centerWithSessions.length)
+            clearInterval(interval);
         });
       }, 1000);
       setTimer([...timer, interval]);
     }
-  }
+  };
 
   const getIfSlotExists = (data: CENTER_RESPONSE, age: number) => {
-    const centerWithSessions = data.centers?.map(center => {
-      const sessions = center.sessions?.filter(session => session.available_capacity && session.available_capacity > 0 && age >= session.min_age_limit);
-      if (sessions?.length)
-        return {
-          ...center,
-          sessions: sessions
-        }
-      else return null;
-    }).filter(center => center);
+    const centerWithSessions = data.centers
+      ?.map((center) => {
+        const sessions = center.sessions?.filter(
+          (session) =>
+            session.available_capacity &&
+            session.available_capacity > 0 &&
+            age >= session.min_age_limit
+        );
+        if (sessions?.length)
+          return {
+            ...center,
+            sessions: sessions,
+          };
+        else return null;
+      })
+      .filter((center) => center);
     return centerWithSessions;
-  }
+  };
 
   return (
     <VStack spacing="24px">
