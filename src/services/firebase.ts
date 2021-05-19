@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
-
+import 'firebase/firestore';
+import 'firebase/analytics';
 declare global {
   interface Window {
     recaptchaVerifier: firebase.auth.RecaptchaVerifier;
@@ -18,6 +19,7 @@ const app = firebase.initializeApp({
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 });
 export const auth = app.auth();
+export const firestore = firebase.firestore(app);
 export default app;
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 export const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();

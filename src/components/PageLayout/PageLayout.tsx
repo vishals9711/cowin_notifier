@@ -1,14 +1,18 @@
-import { Box, Button, VStack } from '@chakra-ui/react';
+import { Box, Button, SimpleGrid, VStack } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import UserDataContext from '../../context/UserDataContext';
-import { auth } from '../../services/firebase';
+import { SLOT_ALERTS } from '../../models/slot';
+import { auth, firestore } from '../../services/firebase';
+import AlertCards from '../AlertCards/AlertCards';
 import CardComponent from '../CardComponent/CardComponent';
 import LoginModal from '../LoginModal/LoginModal';
 const PageLayout = (): React.ReactElement => {
   const [modalStatus, setModalStatus] = useState(false);
   const setUserData = useContext(UserDataContext)?.setUserData;
   const userData = useContext(UserDataContext)?.userData;
+  const setSlotAlerts = useContext(UserDataContext)?.setSlotAlerts;
+  const slotAlerts = useContext(UserDataContext)?.slotAlerts;
   const onModalClose = () => {
     setModalStatus(false);
   };
@@ -25,41 +29,67 @@ const PageLayout = (): React.ReactElement => {
             uid,
             isLoggedIn: true,
           });
+        firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .then((respData) => {
+            console.log(respData.data());
+            const data = respData.data();
+            const alert: Array<SLOT_ALERTS> = data ? data['alert'] : [];
+            if (alert && alert.length && setSlotAlerts) {
+              setSlotAlerts(alert);
+            }
+          });
       }
     });
-  }, [setUserData]);
+  }, [setUserData, setSlotAlerts]);
 
   return (
-    <VStack
-      padding={8}
+    <SimpleGrid
+      columns={slotAlerts && slotAlerts.length > 0 ? [1, 1, 2] : [1]}
       spacing={4}
-      borderWidth="1px"
-      borderRadius="lg"
-      marginX={'auto'}
     >
-      {console.log(userData)}
-      {console.log(!(userData && userData.isLoggedIn))}
-      {!(userData && userData.isLoggedIn) && (
-        <Button
-          colorScheme="teal"
-          size="sm"
-          variant="outline"
-          onClick={() => setModalStatus(true)}
+      <VStack
+        padding={8}
+        spacing={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        marginX={'auto'}
+      >
+        {!(userData && userData.isLoggedIn) && (
+          <Button
+            colorScheme="teal"
+            size="sm"
+            variant="outline"
+            onClick={() => setModalStatus(true)}
+          >
+            Log In
+          </Button>
+        )}
+        <Box>
+          Vaccine Appointment Alert
+          <ColorModeSwitcher justifySelf="flex-end" />
+        </Box>
+        <Box>
+          <CardComponent />
+        </Box>
+        {modalStatus && (
+          <LoginModal isOpen={modalStatus} onClose={onModalClose} />
+        )}
+      </VStack>
+      {slotAlerts && slotAlerts.length > 0 && (
+        <VStack
+          padding={8}
+          spacing={4}
+          borderWidth="1px"
+          borderRadius="lg"
+          marginX={'auto'}
         >
-          Log In
-        </Button>
+          <AlertCards />{' '}
+        </VStack>
       )}
-      <Box>
-        Vaccine Appointment Alert
-        <ColorModeSwitcher justifySelf="flex-end" />
-      </Box>
-      <Box>
-        <CardComponent />
-      </Box>
-      {modalStatus && (
-        <LoginModal isOpen={modalStatus} onClose={onModalClose} />
-      )}
-    </VStack>
+    </SimpleGrid>
   );
 };
 
