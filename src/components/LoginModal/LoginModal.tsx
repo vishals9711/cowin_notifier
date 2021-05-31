@@ -12,7 +12,12 @@ import {
 } from '@chakra-ui/react';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { FaFacebookSquare, FaGoogle, FaTwitter } from 'react-icons/fa';
+import {
+  FaFacebookSquare,
+  FaGoogle,
+  FaPhoneAlt,
+  FaTwitter,
+} from 'react-icons/fa';
 import app, {
   auth,
   facebookAuthProvider,
@@ -109,13 +114,13 @@ export default function LoginModal(props: IModal): React.ReactElement {
                   icon={<FaTwitter />}
                   onClick={() => oAuthSignIn(twitterAuthProvider)}
                 />
-                {/* <IconButton
-                                    fontSize="24px"
-                                    variant="ghost"
-                                    aria-label="Sign in with Facebook"
-                                    icon={<FaPhoneAlt />}
-                                    ref={(ref) => setRef(ref)}
-                                /> */}
+                <IconButton
+                  fontSize="24px"
+                  variant="ghost"
+                  aria-label="Sign in with Facebook"
+                  icon={<FaPhoneAlt />}
+                  ref={(ref) => setRef(ref)}
+                />
               </HStack>
             </VStack>
           </ModalBody>

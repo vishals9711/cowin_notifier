@@ -1,15 +1,18 @@
 import { Box, ChakraProvider, Grid, theme } from '@chakra-ui/react';
 import React from 'react';
 import { UserDataProvider } from '../../context/UserDataContext';
+import Navbar from '../Navbar/Navbar';
 import PageLayout from '../PageLayout/PageLayout';
 
 export const App = (): React.ReactElement => (
   <ChakraProvider theme={theme}>
     <UserDataProvider>
       <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <PageLayout />
-        </Grid>
+        <Navbar>
+          <Grid minH="85vh" p={4}>
+            <PageLayout />
+          </Grid>
+        </Navbar>
       </Box>
     </UserDataProvider>
   </ChakraProvider>

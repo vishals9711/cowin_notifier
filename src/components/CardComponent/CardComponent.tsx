@@ -99,7 +99,7 @@ function CardComponent(): React.ReactElement {
         ref={ageRef}
       >
         {AGE_LIMITS.map((age, index) => (
-          <option value={age.id} key={index}>
+          <option value={age.id} key={index} style={{ padding: '1rem' }}>
             {age.label}
           </option>
         ))}

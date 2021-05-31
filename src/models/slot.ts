@@ -5,5 +5,4 @@ export interface SLOT_ALERTS {
   state_name: string;
   age_category: number;
   date_created: number;
-  available?: boolean;
 }

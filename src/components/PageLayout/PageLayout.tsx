@@ -1,33 +1,33 @@
-import { Box, Button, SimpleGrid, VStack } from '@chakra-ui/react';
-import React, { useContext, useEffect, useState } from 'react';
-import { ColorModeSwitcher } from '../../ColorModeSwitcher';
+import {
+  Box,
+  SimpleGrid,
+  useBreakpointValue,
+  useColorModeValue,
+  VStack,
+} from '@chakra-ui/react';
+import React, { useContext, useEffect } from 'react';
 import UserDataContext from '../../context/UserDataContext';
 import { SLOT_ALERTS } from '../../models/slot';
 import { auth, firestore } from '../../services/firebase';
 import AlertCards from '../AlertCards/AlertCards';
 import CardComponent from '../CardComponent/CardComponent';
-import LoginModal from '../LoginModal/LoginModal';
 const PageLayout = (): React.ReactElement => {
-  const [modalStatus, setModalStatus] = useState(false);
   const setUserData = useContext(UserDataContext)?.setUserData;
-  const userData = useContext(UserDataContext)?.userData;
   const setSlotAlerts = useContext(UserDataContext)?.setSlotAlerts;
   const slotAlerts = useContext(UserDataContext)?.slotAlerts;
-  const onModalClose = () => {
-    setModalStatus(false);
-  };
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        const { displayName, uid } = user;
+        const { displayName, uid, photoURL } = user;
         console.log(displayName);
-        console.log(uid);
+        console.log(user);
         if (setUserData)
           setUserData({
             displayName: displayName || '',
             uid,
             isLoggedIn: true,
+            photoURL: photoURL,
           });
         firestore
           .collection('users')
@@ -44,7 +44,8 @@ const PageLayout = (): React.ReactElement => {
       }
     });
   }, [setUserData, setSlotAlerts]);
-
+  const variant = useBreakpointValue({ base: '1', md: '2' });
+  const bgColor = useColorModeValue('gray.100', 'gray.900');
   return (
     <SimpleGrid
       columns={slotAlerts && slotAlerts.length > 0 ? [1, 1, 2] : [1]}
@@ -55,36 +56,26 @@ const PageLayout = (): React.ReactElement => {
         spacing={4}
         borderWidth="1px"
         borderRadius="lg"
-        marginX={'auto'}
+        marginLeft={variant === '1' ? '0' : 'auto'}
+        marginRight={
+          variant === '1' ? '0' : slotAlerts && slotAlerts.length ? 0 : 'auto'
+        }
+        bg={bgColor}
       >
-        {!(userData && userData.isLoggedIn) && (
-          <Button
-            colorScheme="teal"
-            size="sm"
-            variant="outline"
-            onClick={() => setModalStatus(true)}
-          >
-            Log In
-          </Button>
-        )}
-        <Box>
-          Vaccine Appointment Alert
-          <ColorModeSwitcher justifySelf="flex-end" />
-        </Box>
+        <Box>Create Appointment Alert</Box>
         <Box>
           <CardComponent />
         </Box>
-        {modalStatus && (
-          <LoginModal isOpen={modalStatus} onClose={onModalClose} />
-        )}
       </VStack>
       {slotAlerts && slotAlerts.length > 0 && (
         <VStack
-          padding={8}
+          padding={4}
           spacing={4}
           borderWidth="1px"
           borderRadius="lg"
-          marginX={'auto'}
+          marginRight={'auto'}
+          marginLeft={variant === '1' ? 'auto' : 0}
+          bg={bgColor}
         >
           <AlertCards />{' '}
         </VStack>

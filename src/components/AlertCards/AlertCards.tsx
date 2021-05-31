@@ -10,6 +10,11 @@ import {
 import React, { useContext } from 'react';
 import UserDataContext from '../../context/UserDataContext';
 import { SLOT_ALERTS } from '../../models/slot';
+import { CloseButton } from '@chakra-ui/react';
+
+interface ALERT extends SLOT_ALERTS {
+  index: number;
+}
 
 const AlertCards = (): React.ReactElement => {
   const { colorMode } = useColorMode();
@@ -19,12 +24,19 @@ const AlertCards = (): React.ReactElement => {
     district_name,
     age_category,
     date_created,
-  }: SLOT_ALERTS) => (
-    <Box p={5} shadow="md" borderWidth="1px">
+    index,
+  }: ALERT) => (
+    <Box
+      p={5}
+      shadow="md"
+      borderWidth="1px"
+      pos={'relative'}
+      borderColor={'yellow.400'}
+    >
       <Flex>
         <Center
-          w="48px"
-          h={'48px'}
+          w="64px"
+          h={'64px'}
           bg={colorMode === 'light' ? '#1a202c' : 'white'}
           color={colorMode === 'dark' ? '#1f2937' : 'white'}
           marginRight={8}
@@ -45,6 +57,12 @@ const AlertCards = (): React.ReactElement => {
           </Text>
         </Box>
       </Flex>
+      <CloseButton
+        pos={'absolute'}
+        top={'4px'}
+        right={'4px'}
+        onClick={() => console.log(index)}
+      />
     </Box>
   );
 
@@ -54,7 +72,9 @@ const AlertCards = (): React.ReactElement => {
         <Text>{'Alerts'}</Text>
       </Box>
       {slotAlerts &&
-        slotAlerts.map((slots, index) => <AlertBox {...slots} key={index} />)}
+        slotAlerts.map((slots, index) => (
+          <AlertBox {...slots} index={index} key={index} />
+        ))}
     </Stack>
   );
 };
