@@ -4,10 +4,6 @@ import {
   Button,
   Flex,
   Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -15,6 +11,7 @@ import React, { useContext, useState } from 'react';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import UserDataContext from '../../context/UserDataContext';
 import LoginModal from '../LoginModal/LoginModal';
+import ProfileModal from '../ProfileModal/ProfileModal';
 
 type IProps = {
   children: React.ReactNode;
@@ -22,10 +19,13 @@ type IProps = {
 
 const Navbar = ({ children }: IProps): React.ReactElement => {
   const userData = useContext(UserDataContext)?.userData;
+  const setUserData = useContext(UserDataContext)?.setUserData;
   const [modalStatus, setModalStatus] = useState(false);
   const onModalClose = () => {
     setModalStatus(false);
   };
+  const [profileModalStatus, setProfileModalStatus] = useState(false);
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} height={16}>
@@ -53,20 +53,18 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
               )}
               {userData && userData.isLoggedIn && (
                 <>
-                  <MenuButton
+                  <Button
                     as={Button}
                     rounded={'full'}
                     variant={'link'}
                     cursor={'pointer'}
+                    onClick={() => {
+                      setProfileModalStatus(true);
+                      console.log('----');
+                    }}
                   >
                     <Avatar size={'sm'} src={userData.photoURL || ''} />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem>Link 1</MenuItem>
-                    <MenuItem>Link 2</MenuItem>
-                    <MenuDivider />
-                    <MenuItem>Link 3</MenuItem>
-                  </MenuList>
+                  </Button>
                 </>
               )}
               <ColorModeSwitcher />
@@ -76,6 +74,16 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
       </Box>
       {modalStatus && (
         <LoginModal isOpen={modalStatus} onClose={onModalClose} />
+      )}
+      {profileModalStatus}
+      {console.log(userData)}
+      {profileModalStatus && userData && (
+        <ProfileModal
+          isOpen={profileModalStatus}
+          onClose={() => setProfileModalStatus(false)}
+          userData={userData}
+          setUserData={setUserData}
+        />
       )}
       <Box p={2}>{children}</Box>
     </>

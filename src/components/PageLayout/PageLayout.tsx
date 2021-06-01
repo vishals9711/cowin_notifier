@@ -19,7 +19,7 @@ const PageLayout = (): React.ReactElement => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        const { displayName, uid, photoURL } = user;
+        const { displayName, uid, photoURL, phoneNumber } = user;
         console.log(displayName);
         console.log(user);
         if (setUserData)
@@ -28,6 +28,7 @@ const PageLayout = (): React.ReactElement => {
             uid,
             isLoggedIn: true,
             photoURL: photoURL,
+            mobile_number: phoneNumber,
           });
         firestore
           .collection('users')

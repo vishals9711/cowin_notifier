@@ -24,3 +24,4 @@ export default app;
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 export const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();
 export const twitterAuthProvider = new firebase.auth.TwitterAuthProvider();
+export const phoneAuthProvider = new firebase.auth.PhoneAuthProvider();

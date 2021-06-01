@@ -60,24 +60,29 @@ function CardComponent(): React.ReactElement {
           )
         ) {
           setSlotAlerts([...slotAlerts, obj]);
-          firestore
-            .collection('users')
-            .doc(userData.uid)
-            .set({ alert: [...slotAlerts, obj] })
+          const userObj = firestore.collection('users').doc(userData.uid);
+
+          userObj
+            .update({ alert: [...slotAlerts, obj] })
             .then((data) => {
               console.log('data added!');
               console.log(data);
+            })
+            .catch((err) => {
+              userObj.set({ alert: [...slotAlerts, obj] });
             });
         }
       } else if (setSlotAlerts) {
         setSlotAlerts([obj]);
-        firestore
-          .collection('users')
-          .doc(userData.uid)
-          .set({ alert: [obj] })
+        const userObj = firestore.collection('users').doc(userData.uid);
+        userObj
+          .update({ alert: [obj] })
           .then((data) => {
             console.log('data added!');
             console.log(data);
+          })
+          .catch((err) => {
+            userObj.set({ alert: [obj] });
           });
       }
       setAgeCategory(null);

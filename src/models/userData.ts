@@ -3,4 +3,5 @@ export interface USER_DATA {
   uid: string;
   isLoggedIn: boolean;
   photoURL?: string | null;
+  mobile_number?: string | null;
 }
