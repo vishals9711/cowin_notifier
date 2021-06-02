@@ -60,7 +60,6 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
                     cursor={'pointer'}
                     onClick={() => {
                       setProfileModalStatus(true);
-                      console.log('----');
                     }}
                   >
                     <Avatar size={'sm'} src={userData.photoURL || ''} />
@@ -75,8 +74,6 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
       {modalStatus && (
         <LoginModal isOpen={modalStatus} onClose={onModalClose} />
       )}
-      {profileModalStatus}
-      {console.log(userData)}
       {profileModalStatus && userData && (
         <ProfileModal
           isOpen={profileModalStatus}

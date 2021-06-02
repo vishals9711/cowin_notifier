@@ -53,7 +53,7 @@ const PageLayout = (): React.ReactElement => {
       spacing={4}
     >
       <VStack
-        padding={8}
+        padding={4}
         spacing={4}
         borderWidth="1px"
         borderRadius="lg"
@@ -74,10 +74,12 @@ const PageLayout = (): React.ReactElement => {
           spacing={4}
           borderWidth="1px"
           borderRadius="lg"
-          marginRight={'auto'}
-          marginLeft={variant === '1' ? 'auto' : 0}
+          marginRight={variant === '2' ? 'auto' : 0}
+          marginLeft={0}
           bg={bgColor}
+          // maxW={variant === '2' ? '26rem' : 'unset'}
         >
+          {console.log(variant)}
           <AlertCards />{' '}
         </VStack>
       )}

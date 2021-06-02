@@ -1,4 +1,4 @@
-import { Button, Select, VStack } from '@chakra-ui/react';
+import { Button, Select, useToast, VStack } from '@chakra-ui/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AGE_LIMITS } from '../../constants/ageLimit';
 import { STATES } from '../../constants/states';
@@ -30,6 +30,7 @@ function CardComponent(): React.ReactElement {
   const ageRef = useRef<HTMLSelectElement | null>(null);
   const stateRef = useRef<HTMLSelectElement | null>(null);
   const distRef = useRef<HTMLSelectElement | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     if (currentState) {
@@ -91,6 +92,12 @@ function CardComponent(): React.ReactElement {
       if (distRef && distRef.current) distRef.current.selectedIndex = 0;
       setCurrentState(null);
       if (stateRef && stateRef.current) stateRef.current.selectedIndex = 0;
+      toast({
+        title: 'Alert Created',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

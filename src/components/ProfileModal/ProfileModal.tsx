@@ -18,6 +18,7 @@ import {
   PinInputField,
   Switch,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import firebase from 'firebase';
@@ -44,6 +45,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
     setConfirmation,
   ] = useState<firebase.auth.ConfirmationResult | null>(null);
   const [otp, setOTP] = useState('');
+  const toast = useToast();
   useEffect(() => {
     if (userData && userData.mobile_number) setAlertsBool(true);
   }, [userData]);
@@ -71,13 +73,23 @@ export default function ProfileModal(props: IModal): React.ReactElement {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         setConfirmation(confirmationResult);
-        console.log(confirmationResult);
+        toast({
+          title: 'OTP Sent',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
         // ...
       })
       .catch((error) => {
         console.log(error);
-        // Error; SMS not sent
-        // ...
+        toast({
+          title: 'Error Occured',
+          description: 'Please try again',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -92,14 +104,45 @@ export default function ProfileModal(props: IModal): React.ReactElement {
           userObj
             .update({ mobile_number: phoneNumber })
             .then((respData) => {
-              console.log(respData);
+              toast({
+                title: 'Mobile Number Linked',
+                description: 'Stay tuned for text alerts',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+              });
             })
             .catch((err) => {
-              userObj.set({ mobile_number: phoneNumber });
+              userObj
+                .set({ mobile_number: phoneNumber })
+                .then(() => {
+                  toast({
+                    title: 'Mobile Number Linked',
+                    description: 'Stay tuned for text alerts',
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                })
+                .catch(() => {
+                  toast({
+                    title: 'Error Occured',
+                    description: 'Please try again',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                });
             });
         })
         .catch((error) => {
-          console.log(error);
+          toast({
+            title: 'Incorrect OTP',
+            description: 'Please try again',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
         });
     }
   };
@@ -110,10 +153,24 @@ export default function ProfileModal(props: IModal): React.ReactElement {
       .signOut()
       .then(() => {
         // Sign-out successful.
-        if (setUserData) setUserData(null);
+        if (setUserData) {
+          setUserData(null);
+          toast({
+            title: 'Log Out successful',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       })
       .catch((error) => {
-        // An error happened.
+        toast({
+          title: 'Error Occured',
+          description: 'Please try again',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -146,11 +203,12 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                     marginLeft={6}
                     size="lg"
                     onChange={(evnt) => setAlertsBool(evnt.target.checked)}
+                    isChecked={alertsBool}
                   />
                 </Flex>
               </VStack>
             </HStack>
-            {alertsBool && (
+            {alertsBool && !userData.mobile_number && (
               <Box padding={4} spacing={4} borderWidth="1px" borderRadius="lg">
                 <VStack spacing={4}>
                   <InputGroup>

@@ -8,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import firebase from 'firebase';
@@ -27,15 +28,31 @@ interface IModal {
 
 export default function LoginModal(props: IModal): React.ReactElement {
   const { isOpen, onClose } = props;
+  const toast = useToast();
+
   // const [buttonRef, setRef] = useState<HTMLButtonElement | null>(null);
   const oAuthSignIn = (provider: firebase.auth.AuthProvider) => {
     auth
       .signInWithPopup(provider)
       .then((result) => {
-        console.log(result);
+        toast({
+          title: 'Login successful',
+          description: 'Continue to create your alert',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
         onClose();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast({
+          title: 'Error Occured',
+          description: 'Please try again',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   // useEffect(() => {
