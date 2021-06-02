@@ -22,20 +22,20 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { SLOT_ALERTS } from '../../models/slot';
 import { USER_DATA } from '../../models/userData';
 import app, { auth, firestore } from '../../services/firebase';
 interface IModal {
   isOpen: boolean;
   onClose: () => void;
   userData: USER_DATA;
-  setUserData:
-    | React.Dispatch<React.SetStateAction<USER_DATA | null>>
-    | undefined;
+  setUserData: Dispatch<SetStateAction<USER_DATA | null>> | undefined;
+  setSlotAlerts: Dispatch<SetStateAction<Array<SLOT_ALERTS>>>;
 }
 
 export default function ProfileModal(props: IModal): React.ReactElement {
-  const { isOpen, onClose, userData, setUserData } = props;
+  const { isOpen, onClose, userData, setUserData, setSlotAlerts } = props;
   const [alertsBool, setAlertsBool] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [formDirty, setFormDirty] = useState(false);
@@ -153,8 +153,9 @@ export default function ProfileModal(props: IModal): React.ReactElement {
       .signOut()
       .then(() => {
         // Sign-out successful.
-        if (setUserData) {
+        if (setUserData && setSlotAlerts) {
           setUserData(null);
+          setSlotAlerts([]);
           toast({
             title: 'Log Out successful',
             status: 'success',

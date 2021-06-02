@@ -62,6 +62,7 @@ const PageLayout = (): React.ReactElement => {
           variant === '1' ? '0' : slotAlerts && slotAlerts.length ? 0 : 'auto'
         }
         bg={bgColor}
+        minW={variant === '2' ? '29rem' : 'unset'}
       >
         <Box>Create Appointment Alert</Box>
         <Box>
@@ -77,7 +78,7 @@ const PageLayout = (): React.ReactElement => {
           marginRight={variant === '2' ? 'auto' : 0}
           marginLeft={0}
           bg={bgColor}
-          // maxW={variant === '2' ? '26rem' : 'unset'}
+          minW={variant === '2' ? '29rem' : 'unset'}
         >
           {console.log(variant)}
           <AlertCards />{' '}

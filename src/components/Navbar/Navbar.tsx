@@ -20,6 +20,7 @@ type IProps = {
 const Navbar = ({ children }: IProps): React.ReactElement => {
   const userData = useContext(UserDataContext)?.userData;
   const setUserData = useContext(UserDataContext)?.setUserData;
+  const setSlotAlerts = useContext(UserDataContext)?.setSlotAlerts;
   const [modalStatus, setModalStatus] = useState(false);
   const onModalClose = () => {
     setModalStatus(false);
@@ -74,12 +75,13 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
       {modalStatus && (
         <LoginModal isOpen={modalStatus} onClose={onModalClose} />
       )}
-      {profileModalStatus && userData && (
+      {profileModalStatus && userData && setSlotAlerts && (
         <ProfileModal
           isOpen={profileModalStatus}
           onClose={() => setProfileModalStatus(false)}
           userData={userData}
           setUserData={setUserData}
+          setSlotAlerts={setSlotAlerts}
         />
       )}
       <Box p={2}>{children}</Box>

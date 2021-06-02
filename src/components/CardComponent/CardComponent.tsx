@@ -1,4 +1,4 @@
-import { Button, Select, useToast, VStack } from '@chakra-ui/react';
+import { Box, Button, Select, useToast, VStack } from '@chakra-ui/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AGE_LIMITS } from '../../constants/ageLimit';
 import { STATES } from '../../constants/states';
@@ -7,6 +7,7 @@ import { DISTRICT } from '../../models/districts';
 import { SLOT_ALERTS } from '../../models/slot';
 import { firestore } from '../../services/firebase';
 import { getDistrictByState } from '../../services/getDistricts';
+import ProfileModal from '../ProfileModal/ProfileModal';
 
 interface onChange {
   target: {
@@ -27,10 +28,12 @@ function CardComponent(): React.ReactElement {
   const setSlotAlerts = useContext(UserDataContext)?.setSlotAlerts;
   const slotAlerts = useContext(UserDataContext)?.slotAlerts;
   const userData = useContext(UserDataContext)?.userData;
+  const setUserData = useContext(UserDataContext)?.setUserData;
   const ageRef = useRef<HTMLSelectElement | null>(null);
   const stateRef = useRef<HTMLSelectElement | null>(null);
   const distRef = useRef<HTMLSelectElement | null>(null);
   const toast = useToast();
+  const [profileModalStatus, setProfileModalStatus] = useState(false);
 
   useEffect(() => {
     if (currentState) {
@@ -154,14 +157,31 @@ function CardComponent(): React.ReactElement {
         </Select>
       )}
       {!districts && <Select placeholder="Select District" disabled></Select>}
-      <Button
-        colorScheme="teal"
-        variant="outline"
-        disabled={!(currentState && currentDistrict && ageCategory)}
-        onClick={createAlert}
-      >
-        Create Alert
-      </Button>
+      {userData && (
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          disabled={!(currentState && currentDistrict && ageCategory)}
+          onClick={createAlert}
+        >
+          Create Alert
+        </Button>
+      )}
+      {!userData && <Box>Please Login to create alert</Box>}
+      {userData && !userData.mobile_number && (
+        <Button colorScheme="teal" variant="outline" onClick={createAlert}>
+          Enable Text Alerts
+        </Button>
+      )}
+      {setUserData && setSlotAlerts && userData && profileModalStatus && (
+        <ProfileModal
+          isOpen={profileModalStatus}
+          onClose={() => setProfileModalStatus(false)}
+          userData={userData}
+          setUserData={setUserData}
+          setSlotAlerts={setSlotAlerts}
+        />
+      )}
     </VStack>
   );
 }
