@@ -59,7 +59,7 @@ const AlertCards = (): React.ReactElement => {
           {' + '}
         </Center>
         <Box flex="1">
-          <Heading fontSize="xl" maxW="14rem">
+          <Heading fontSize="xl" maxW="14rem" marginRight={'4rem'}>
             {district_name}
             {', '}
             {state_name}
@@ -86,22 +86,23 @@ const AlertCards = (): React.ReactElement => {
         right={'4px'}
         onClick={() => deleteAlert(index)}
       />
-      <IconButton
-        variant="outline"
-        colorScheme="teal"
-        aria-label="Reset"
-        size="sm"
-        pos={'absolute'}
-        top={'16px'}
-        right={'40px'}
-        icon={<RepeatIcon />}
-        onClick={() => refreshAlert(index)}
-      />
+      {available && date_updated && (
+        <IconButton
+          variant="outline"
+          colorScheme="teal"
+          aria-label="Reset"
+          size="sm"
+          pos={'absolute'}
+          top={'16px'}
+          right={'40px'}
+          icon={<RepeatIcon />}
+          onClick={() => refreshAlert(index)}
+        />
+      )}
     </Box>
   );
 
   const deleteAlert = (index: number) => {
-    console.log(index);
     if (userData && slotAlerts && setSlotAlerts) {
       const userObj = firestore.collection('users').doc(userData.uid);
       const removed = slotAlerts.filter((_data, i) => i !== index);

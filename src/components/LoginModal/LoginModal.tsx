@@ -55,34 +55,6 @@ export default function LoginModal(props: IModal): React.ReactElement {
       });
   };
 
-  // useEffect(() => {
-  //   console.log(buttonRef);
-  //   console.log(window.recaptchaVerifier);
-  //   if (buttonRef && !window.recaptchaVerifier) {
-  //     console.log('-------');
-  //     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-  //       buttonRef,
-  //       {
-  //         size: 'invisible',
-  //         callback: (response: string) => {
-  //           console.log(response);
-  //           firebase
-  //             .auth()
-  //             .signInWithPhoneNumber('+917020476195', window.recaptchaVerifier)
-  //             .then((confirmationResult) => {
-  //               console.log(confirmationResult);
-  //             })
-  //             .catch((error) => {
-  //               console.log(error);
-  //             });
-  //         },
-  //       },
-  //       app
-  //     );
-  //     window.recaptchaVerifier.render();
-  //   }
-  // }, [buttonRef]);
-
   const middleText = (text: string) => (
     <Text display="flex" justifyContent="center" p={2} fontSize={'20px'}>
       {text}

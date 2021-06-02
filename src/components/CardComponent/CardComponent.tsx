@@ -169,7 +169,11 @@ function CardComponent(): React.ReactElement {
       )}
       {!userData && <Box>Please Login to create alert</Box>}
       {userData && !userData.mobile_number && (
-        <Button colorScheme="teal" variant="outline" onClick={createAlert}>
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          onClick={() => setProfileModalStatus(true)}
+        >
           Enable Text Alerts
         </Button>
       )}

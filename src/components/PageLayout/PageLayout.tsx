@@ -20,8 +20,6 @@ const PageLayout = (): React.ReactElement => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         const { displayName, uid, photoURL, phoneNumber } = user;
-        console.log(displayName);
-        console.log(user);
         if (setUserData)
           setUserData({
             displayName: displayName || '',
@@ -35,7 +33,6 @@ const PageLayout = (): React.ReactElement => {
           .doc(uid)
           .get()
           .then((respData) => {
-            console.log(respData.data());
             const data = respData.data();
             const alert: Array<SLOT_ALERTS> = data ? data['alert'] : [];
             if (alert && alert.length && setSlotAlerts) {
@@ -80,7 +77,6 @@ const PageLayout = (): React.ReactElement => {
           bg={bgColor}
           minW={variant === '2' ? '29rem' : 'unset'}
         >
-          {console.log(variant)}
           <AlertCards />{' '}
         </VStack>
       )}

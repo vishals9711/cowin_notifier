@@ -50,10 +50,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
     if (userData && userData.mobile_number) setAlertsBool(true);
   }, [userData]);
   useEffect(() => {
-    console.log(buttonRef);
-    console.log(window.recaptchaVerifier);
     if (buttonRef && !window.recaptchaVerifier) {
-      console.log('-------');
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
         buttonRef,
         {
@@ -98,7 +95,6 @@ export default function ProfileModal(props: IModal): React.ReactElement {
       confirmation
         .confirm(otp)
         .then((result) => {
-          console.log(auth.currentUser);
           const userObj = firestore.collection('users').doc(userData.uid);
 
           userObj
@@ -111,6 +107,9 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                 duration: 5000,
                 isClosable: true,
               });
+              if (setUserData)
+                setUserData({ ...userData, mobile_number: phoneNumber });
+              onClose();
             })
             .catch((err) => {
               userObj
@@ -123,6 +122,9 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                     duration: 5000,
                     isClosable: true,
                   });
+                  if (setUserData)
+                    setUserData({ ...userData, mobile_number: phoneNumber });
+                  onClose();
                 })
                 .catch(() => {
                   toast({
@@ -195,11 +197,11 @@ export default function ProfileModal(props: IModal): React.ReactElement {
               <Avatar size={'xl'} src={userData.photoURL || ''} />
               <VStack spacing="16px" minWidth={'120px'} flexGrow={1}>
                 {/* <Box> */}
-                <Heading as="h4" size="md">
+                <Heading as="h4" size="md" fontSize={'1.3em'}>
                   {userData.displayName}
                 </Heading>
                 <Flex alignItems={'center'}>
-                  <Text fontSize={20}>Enable Text Alerts</Text>
+                  <Text fontSize={'1.1em'}>Enable Text Alerts</Text>
                   <Switch
                     marginLeft={6}
                     size="lg"
