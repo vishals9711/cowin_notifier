@@ -56,7 +56,7 @@ export default function LoginModal(props: IModal): React.ReactElement {
   };
 
   const middleText = (text: string) => (
-    <Text display="flex" justifyContent="center" p={2} fontSize={'20px'}>
+    <Text display="flex" justifyContent="center" p={2} fontSize={'1.1em'}>
       {text}
     </Text>
   );
@@ -79,28 +79,28 @@ export default function LoginModal(props: IModal): React.ReactElement {
               {middleText('Log in to create alerts.')}
               <HStack>
                 <IconButton
-                  fontSize="24px"
+                  fontSize={'1.1em'}
                   variant="ghost"
                   aria-label="Sign in with Google"
                   icon={<FaGoogle />}
                   onClick={() => oAuthSignIn(googleAuthProvider)}
                 />
                 <IconButton
-                  fontSize="24px"
+                  fontSize={'1.1em'}
                   variant="ghost"
                   aria-label="Sign in with Facebook"
                   icon={<FaFacebookSquare />}
                   onClick={() => oAuthSignIn(facebookAuthProvider)}
                 />
                 <IconButton
-                  fontSize="24px"
+                  fontSize={'1.1em'}
                   variant="ghost"
                   aria-label="Sign in with Twitter"
                   icon={<FaTwitter />}
                   onClick={() => oAuthSignIn(twitterAuthProvider)}
                 />
                 {/* <IconButton
-                  fontSize="24px"
+                  fontSize={'1.1em'}
                   variant="ghost"
                   aria-label="Sign in with Phone Number"
                   icon={<FaPhoneAlt />}

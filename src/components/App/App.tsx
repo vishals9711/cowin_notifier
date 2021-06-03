@@ -7,7 +7,7 @@ import PageLayout from '../PageLayout/PageLayout';
 export const App = (): React.ReactElement => (
   <ChakraProvider theme={theme}>
     <UserDataProvider>
-      <Box textAlign="center" fontSize="xl">
+      <Box textAlign="center" fontSize={'1em'}>
         <Navbar>
           <Grid minH="85vh" p={4}>
             <PageLayout />

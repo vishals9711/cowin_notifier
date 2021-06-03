@@ -29,16 +29,15 @@ const Navbar = ({ children }: IProps): React.ReactElement => {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} height={16}>
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={2} height={16}>
         <Flex h={16} flexGrow={1}>
           <Flex
             justifySelf={'center'}
-            width={'100%'}
             flexDirection={'column'}
             alignContent={'center'}
             margin={'auto'}
           >
-            <Text>Vaccine Appointment Alert</Text>
+            <Text fontSize={'1em'}>Vaccine Appointment Alert</Text>
           </Flex>
           <Flex alignItems={'center'}>
             <Menu>

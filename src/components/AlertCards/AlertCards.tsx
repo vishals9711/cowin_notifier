@@ -43,7 +43,7 @@ const AlertCards = (): React.ReactElement => {
       minW={'100%'}
     >
       {available && (
-        <Heading fontSize="xl" alignSelf="center" marginBottom={4}>
+        <Heading fontSize={'1em'} alignSelf="center" marginBottom={4}>
           Slot Available
         </Heading>
       )}
@@ -59,7 +59,7 @@ const AlertCards = (): React.ReactElement => {
           {' + '}
         </Center>
         <Box flex="1">
-          <Heading fontSize="xl" maxW="14rem" marginRight={'4rem'}>
+          <Heading fontSize={'1em'} maxW="14rem" marginRight={'4rem'}>
             {district_name}
             {', '}
             {state_name}
@@ -68,13 +68,13 @@ const AlertCards = (): React.ReactElement => {
       </Flex>
       <Box>
         {!available && (
-          <Text mt={4} fontSize="medium">
+          <Text mt={4} fontSize={'0.9em'}>
             {'Created on '}
             {new Date(date_created || new Date().getTime()).toDateString()}
           </Text>
         )}
         {available && date_updated && (
-          <Text mt={4} fontSize="medium">
+          <Text mt={4} fontSize={'0.9em'}>
             {'Updated on '}
             {new Date(date_updated).toDateString()}
           </Text>

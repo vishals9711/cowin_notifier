@@ -10,6 +10,7 @@ import UserDataContext from '../../context/UserDataContext';
 import { SLOT_ALERTS } from '../../models/slot';
 import { auth, firestore } from '../../services/firebase';
 import AlertCards from '../AlertCards/AlertCards';
+import CowinButton from '../AlertCards/VaccineIcon';
 import CardComponent from '../CardComponent/CardComponent';
 const PageLayout = (): React.ReactElement => {
   const setUserData = useContext(UserDataContext)?.setUserData;
@@ -77,6 +78,7 @@ const PageLayout = (): React.ReactElement => {
           bg={bgColor}
           minW={variant === '2' ? '29rem' : 'unset'}
         >
+          <CowinButton />
           <AlertCards />{' '}
         </VStack>
       )}

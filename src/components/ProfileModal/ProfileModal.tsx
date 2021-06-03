@@ -212,7 +212,13 @@ export default function ProfileModal(props: IModal): React.ReactElement {
               </VStack>
             </HStack>
             {alertsBool && !userData.mobile_number && (
-              <Box padding={4} spacing={4} borderWidth="1px" borderRadius="lg">
+              <Box
+                padding={4}
+                spacing={4}
+                marginTop={4}
+                borderWidth="1px"
+                borderRadius="lg"
+              >
                 <VStack spacing={4}>
                   <InputGroup>
                     <InputLeftAddon>{'+91'}</InputLeftAddon>
@@ -251,7 +257,13 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                 </VStack>
               </Box>
             )}
-            <Box padding={4} spacing={4} borderWidth="1px" borderRadius="lg">
+            <Box
+              padding={4}
+              spacing={4}
+              marginTop={4}
+              borderWidth="1px"
+              borderRadius="lg"
+            >
               <VStack>
                 <Button onClick={logOut}>Log Out</Button>
               </VStack>
