@@ -1,4 +1,15 @@
-import { Box, Button, Select, useToast, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Select,
+  useToast,
+  VStack,
+  Checkbox,
+  CheckboxGroup,
+  HStack,
+  Divider,
+  Text,
+} from '@chakra-ui/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AGE_LIMITS } from '../../constants/ageLimit';
 import { STATES } from '../../constants/states';
@@ -8,6 +19,7 @@ import { SLOT_ALERTS } from '../../models/slot';
 import { firestore } from '../../services/firebase';
 import { getDistrictByState } from '../../services/getDistricts';
 import ProfileModal from '../ProfileModal/ProfileModal';
+import { returnIfSameSlot } from '../utils/utils';
 
 interface onChange {
   target: {
@@ -34,13 +46,27 @@ function CardComponent(): React.ReactElement {
   const distRef = useRef<HTMLSelectElement | null>(null);
   const toast = useToast();
   const [profileModalStatus, setProfileModalStatus] = useState(false);
+  const [vaccines, setVaccines] = useState<Array<string>>([
+    'COVISHIELD',
+    'COVAXIN',
+  ]);
+  const [fees, setFees] = useState<Array<string>>(['Free', 'Paid']);
 
   useEffect(() => {
     if (currentState) {
       setDistricts(null);
-      getDistrictByState(currentState.state_id).then((data) => {
-        setDistricts(data.data.districts);
-      });
+      getDistrictByState(currentState.state_id)
+        .then((data) => {
+          setDistricts(data.data.districts);
+        })
+        .catch((err) =>
+          toast({
+            title: 'Error occurred',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          })
+        );
     }
   }, [currentState]);
 
@@ -54,13 +80,16 @@ function CardComponent(): React.ReactElement {
         state_id: currentState.state_id,
         state_name: currentState.state_name,
         date_created: new Date().getTime(),
+        fees,
+        vaccine: vaccines,
       };
       if (slotAlerts && slotAlerts.length && setSlotAlerts) {
         if (
           !slotAlerts.find(
             (slot) =>
               slot.age_category === obj.age_category &&
-              slot.district_id === obj.district_id
+              slot.district_id === obj.district_id &&
+              returnIfSameSlot(slot, obj)
           )
         ) {
           setSlotAlerts([...slotAlerts, obj]);
@@ -157,26 +186,50 @@ function CardComponent(): React.ReactElement {
         </Select>
       )}
       {!districts && <Select placeholder="Select District" disabled></Select>}
+      <Divider orientation="horizontal" />
+      <Text>Vaccine</Text>
+      <CheckboxGroup
+        colorScheme="green"
+        defaultValue={['COVISHIELD', 'COVAXIN']}
+        onChange={(val: Array<string>) => setVaccines(val)}
+      >
+        <HStack>
+          <Checkbox value="COVISHIELD">Covishield</Checkbox>
+          <Checkbox value="COVAXIN">Covaxin</Checkbox>
+        </HStack>
+      </CheckboxGroup>
+      <Divider orientation="horizontal" />
+      <Text>Fees</Text>
+      <CheckboxGroup
+        colorScheme="green"
+        defaultValue={['Free', 'Paid']}
+        onChange={(val: Array<string>) => setFees(val)}
+      >
+        <HStack>
+          <Checkbox value="Free">Free</Checkbox>
+          <Checkbox value="Paid">Paid</Checkbox>
+        </HStack>
+      </CheckboxGroup>
+
       {userData && (
         <Button
           colorScheme="teal"
           variant="outline"
-          disabled={!(currentState && currentDistrict && ageCategory)}
+          disabled={
+            !(
+              currentState &&
+              currentDistrict &&
+              ageCategory &&
+              vaccines.length &&
+              fees.length
+            )
+          }
           onClick={createAlert}
         >
           Create Alert
         </Button>
       )}
       {!userData && <Box>Please Login to create alert</Box>}
-      {userData && !userData.mobile_number && (
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          onClick={() => setProfileModalStatus(true)}
-        >
-          Enable Text Alerts
-        </Button>
-      )}
       {setUserData && setSlotAlerts && userData && profileModalStatus && (
         <ProfileModal
           isOpen={profileModalStatus}

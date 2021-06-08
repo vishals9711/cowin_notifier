@@ -3,6 +3,7 @@ import {
   SimpleGrid,
   useBreakpointValue,
   useColorModeValue,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import React, { useContext, useEffect } from 'react';
@@ -16,11 +17,13 @@ const PageLayout = (): React.ReactElement => {
   const setUserData = useContext(UserDataContext)?.setUserData;
   const setSlotAlerts = useContext(UserDataContext)?.setSlotAlerts;
   const slotAlerts = useContext(UserDataContext)?.slotAlerts;
+  const toast = useToast();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         const { displayName, uid, photoURL, phoneNumber } = user;
+        console.log(uid);
         if (setUserData)
           setUserData({
             displayName: displayName || '',
@@ -39,7 +42,15 @@ const PageLayout = (): React.ReactElement => {
             if (alert && alert.length && setSlotAlerts) {
               setSlotAlerts(alert);
             }
-          });
+          })
+          .catch((err) =>
+            toast({
+              title: 'Error occurred',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+          );
       }
     });
   }, [setUserData, setSlotAlerts]);

@@ -1,31 +1,26 @@
 import {
-  Avatar,
   Box,
   Button,
-  Flex,
-  Heading,
-  HStack,
-  Input,
-  InputGroup,
-  InputLeftAddon,
+  // HStack,
+  // Input,
+  // InputGroup,
+  // InputLeftAddon,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  PinInput,
-  PinInputField,
-  Switch,
-  Text,
+  // PinInput,
+  // PinInputField,
   useToast,
   VStack,
 } from '@chakra-ui/react';
 import firebase from 'firebase';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { SLOT_ALERTS } from '../../models/slot';
 import { USER_DATA } from '../../models/userData';
-import app, { auth, firestore } from '../../services/firebase';
+// import { auth, firestore } from '../../services/firebase';
 interface IModal {
   isOpen: boolean;
   onClose: () => void;
@@ -35,119 +30,119 @@ interface IModal {
 }
 
 export default function ProfileModal(props: IModal): React.ReactElement {
-  const { isOpen, onClose, userData, setUserData, setSlotAlerts } = props;
-  const [alertsBool, setAlertsBool] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [formDirty, setFormDirty] = useState(false);
-  const [buttonRef, setRef] = useState<HTMLInputElement | null>(null);
-  const [
-    confirmation,
-    setConfirmation,
-  ] = useState<firebase.auth.ConfirmationResult | null>(null);
-  const [otp, setOTP] = useState('');
+  const { isOpen, onClose, setUserData, setSlotAlerts } = props;
+  // const [alertsBool, setAlertsBool] = useState(false);
+  // const [phoneNumber, setPhoneNumber] = useState('');
+  // const [formDirty, setFormDirty] = useState(false);
+  // const [buttonRef, setRef] = useState<HTMLInputElement | null>(null);
+  // const [
+  //   confirmation,
+  //   setConfirmation,
+  // ] = useState<firebase.auth.ConfirmationResult | null>(null);
+  // const [otp, setOTP] = useState('');
   const toast = useToast();
-  useEffect(() => {
-    if (userData && userData.mobile_number) setAlertsBool(true);
-  }, [userData]);
-  useEffect(() => {
-    if (buttonRef && !window.recaptchaVerifier) {
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-        buttonRef,
-        {
-          size: 'invisible',
-        },
-        app
-      );
-      window.recaptchaVerifier.render();
-    }
-  }, [buttonRef]);
+  // useEffect(() => {
+  //   if (userData && userData.mobile_number) setAlertsBool(true);
+  // }, [userData]);
+  // useEffect(() => {
+  //   if (buttonRef && !window.recaptchaVerifier) {
+  //     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  //       buttonRef,
+  //       {
+  //         size: 'invisible',
+  //       },
+  //       app
+  //     );
+  //     window.recaptchaVerifier.render();
+  //   }
+  // }, [buttonRef]);
 
-  const getOTP = () => {
-    const appVerifier = window.recaptchaVerifier;
-    auth.currentUser
-      ?.linkWithPhoneNumber(phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        setConfirmation(confirmationResult);
-        toast({
-          title: 'OTP Sent',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        // ...
-      })
-      .catch((error) => {
-        console.log(error);
-        toast({
-          title: 'Error Occured',
-          description: 'Please try again',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
-      });
-  };
+  // const getOTP = () => {
+  //   const appVerifier = window.recaptchaVerifier;
+  //   auth.currentUser
+  //     ?.linkWithPhoneNumber(phoneNumber, appVerifier)
+  //     .then((confirmationResult) => {
+  //       // SMS sent. Prompt user to type the code from the message, then sign the
+  //       // user in with confirmationResult.confirm(code).
+  //       setConfirmation(confirmationResult);
+  //       toast({
+  //         title: 'OTP Sent',
+  //         status: 'success',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       });
+  //       // ...
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast({
+  //         title: 'Error Occured',
+  //         description: 'Please try again',
+  //         status: 'error',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       });
+  //     });
+  // };
 
-  const submitOTP = () => {
-    if (confirmation) {
-      confirmation
-        .confirm(otp)
-        .then((result) => {
-          const userObj = firestore.collection('users').doc(userData.uid);
+  // const submitOTP = () => {
+  //   if (confirmation) {
+  //     confirmation
+  //       .confirm(otp)
+  //       .then((result) => {
+  //         const userObj = firestore.collection('users').doc(userData.uid);
 
-          userObj
-            .update({ mobile_number: phoneNumber })
-            .then((respData) => {
-              toast({
-                title: 'Mobile Number Linked',
-                description: 'Stay tuned for text alerts',
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-              });
-              if (setUserData)
-                setUserData({ ...userData, mobile_number: phoneNumber });
-              onClose();
-            })
-            .catch((err) => {
-              userObj
-                .set({ mobile_number: phoneNumber })
-                .then(() => {
-                  toast({
-                    title: 'Mobile Number Linked',
-                    description: 'Stay tuned for text alerts',
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true,
-                  });
-                  if (setUserData)
-                    setUserData({ ...userData, mobile_number: phoneNumber });
-                  onClose();
-                })
-                .catch(() => {
-                  toast({
-                    title: 'Error Occured',
-                    description: 'Please try again',
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true,
-                  });
-                });
-            });
-        })
-        .catch((error) => {
-          toast({
-            title: 'Incorrect OTP',
-            description: 'Please try again',
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
-        });
-    }
-  };
+  //         userObj
+  //           .update({ mobile_number: phoneNumber })
+  //           .then((respData) => {
+  //             toast({
+  //               title: 'Mobile Number Linked',
+  //               description: 'Stay tuned for text alerts',
+  //               status: 'success',
+  //               duration: 5000,
+  //               isClosable: true,
+  //             });
+  //             if (setUserData)
+  //               setUserData({ ...userData, mobile_number: phoneNumber });
+  //             onClose();
+  //           })
+  //           .catch((err) => {
+  //             userObj
+  //               .set({ mobile_number: phoneNumber })
+  //               .then(() => {
+  //                 toast({
+  //                   title: 'Mobile Number Linked',
+  //                   description: 'Stay tuned for text alerts',
+  //                   status: 'success',
+  //                   duration: 5000,
+  //                   isClosable: true,
+  //                 });
+  //                 if (setUserData)
+  //                   setUserData({ ...userData, mobile_number: phoneNumber });
+  //                 onClose();
+  //               })
+  //               .catch(() => {
+  //                 toast({
+  //                   title: 'Error Occured',
+  //                   description: 'Please try again',
+  //                   status: 'error',
+  //                   duration: 5000,
+  //                   isClosable: true,
+  //                 });
+  //               });
+  //           });
+  //       })
+  //       .catch((error) => {
+  //         toast({
+  //           title: 'Incorrect OTP',
+  //           description: 'Please try again',
+  //           status: 'error',
+  //           duration: 5000,
+  //           isClosable: true,
+  //         });
+  //       });
+  //   }
+  // };
 
   const logOut = () => {
     firebase
@@ -179,7 +174,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
 
   return (
     <>
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size={'lg'}>
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size={'xs'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader py={2} textAlign={'center'}>
@@ -187,7 +182,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody py={4}>
-            <HStack
+            {/* <HStack
               padding={4}
               spacing={4}
               borderWidth="1px"
@@ -196,7 +191,6 @@ export default function ProfileModal(props: IModal): React.ReactElement {
             >
               <Avatar size={'xl'} src={userData.photoURL || ''} />
               <VStack spacing="16px" minWidth={'120px'} flexGrow={1}>
-                {/* <Box> */}
                 <Heading as="h4" size="md" fontSize={'1.3em'}>
                   {userData.displayName}
                 </Heading>
@@ -210,8 +204,8 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                   />
                 </Flex>
               </VStack>
-            </HStack>
-            {alertsBool && !userData.mobile_number && (
+            </HStack> */}
+            {/* {alertsBool && !userData.mobile_number && (
               <Box
                 padding={4}
                 spacing={4}
@@ -231,7 +225,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                       }}
                       isInvalid={formDirty && phoneNumber.length !== 13}
                       errorBorderColor="crimson"
-                      ref={(ref) => setRef(ref)}
+                      // ref={(ref) => setRef(ref)}
                     />
                   </InputGroup>
                   <Button disabled={phoneNumber.length !== 13} onClick={getOTP}>
@@ -256,7 +250,7 @@ export default function ProfileModal(props: IModal): React.ReactElement {
                   )}
                 </VStack>
               </Box>
-            )}
+            )} */}
             <Box
               padding={4}
               spacing={4}

@@ -7,4 +7,6 @@ export interface SLOT_ALERTS {
   date_created: number;
   date_updated?: string;
   available?: boolean;
+  fees?: string[];
+  vaccine?: string[];
 }

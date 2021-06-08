@@ -5,10 +5,13 @@ import {
   CloseButton,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Text,
   useColorMode,
   useToast,
+  Badge,
+  VStack,
 } from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import UserDataContext from '../../context/UserDataContext';
@@ -33,6 +36,8 @@ const AlertCards = (): React.ReactElement => {
     index,
     available,
     date_updated,
+    fees = ['Free', 'Paid'],
+    vaccine = ['COVISHIELD', 'COVAXIN'],
   }: ALERT) => (
     <Box
       p={5}
@@ -64,6 +69,22 @@ const AlertCards = (): React.ReactElement => {
             {', '}
             {state_name}
           </Heading>
+          <VStack maxW="14rem" marginRight={'4rem'} paddingTop={'1rem'}>
+            <HStack alignContent={'center'}>
+              {fees.map((fee, index) => (
+                <Badge variant="outline" colorScheme="green" key={index}>
+                  {fee}
+                </Badge>
+              ))}
+            </HStack>
+            <HStack alignContent={'center'}>
+              {vaccine.map((fee, index) => (
+                <Badge variant="outline" colorScheme="green" key={index}>
+                  {fee}
+                </Badge>
+              ))}
+            </HStack>
+          </VStack>
         </Box>
       </Flex>
       <Box>

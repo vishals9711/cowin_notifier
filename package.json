@@ -31,7 +31,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src"
+    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src",
+    "deploy":"firebase deploy"
   },
   "husky": {
     "hooks": {
